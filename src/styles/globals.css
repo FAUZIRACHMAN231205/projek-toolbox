@@ -6,7 +6,7 @@
   --color-background: #ffffff;
   --color-foreground: #171717;
   --color-green-main: #16a34a;
-  --color-green-light: #e6f3ea; /* soft green for card bg */
+  --color-green-light: #fffff; /* soft green for card bg */
 }
 
 /* dark (optional) */
@@ -25,7 +25,7 @@ html,body{
   background: var(--color-background);
   color: var(--color-foreground);
   -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
+  -moz-osx-font-smoothing:whitescale;
 }
 
 /* ========== Component utilities (use @layer) ========== */
@@ -44,7 +44,7 @@ html,body{
   .card-login{
     width: 505px;
     height: 473px;
-    background-color: var(--color-green-light); /* soft green background */
+    background-color: var(--color-white); /* soft green background */
     border-radius: 18px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.06);
     padding: 2.5rem; /* p-10 */

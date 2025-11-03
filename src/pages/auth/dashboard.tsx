@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // import Head from 'next/head'; // Dihapus sementara untuk preview
+// import Link from 'next/link'; // Diganti dengan <a>
+// import Image from 'next/image'; // Diganti dengan <img>
 import {
     LayoutDashboard,
     User,
@@ -9,7 +11,7 @@ import {
     Home,
     ChevronRight,
     ChevronDown,
-    ArrowUpFromLine, // Diganti dari Sun
+    Sun, // PERBAIKAN: Mengganti ArrowUpFromLine
     CalendarDays, // Diganti dari Clock
     ListChecks, // Diganti dari CheckCircle
     Archive,
@@ -29,9 +31,9 @@ import {
     Filter, // Ikon Filter Todo
     Bookmark, // Ikon Kategori Todo
     MoreHorizontal, // Ikon Opsi Todo
-    Save // Ditambahkan untuk Modal
+    Save, // Ditambahkan untuk Modal
+    FileSignature // Ikon baru untuk logo
 } from 'lucide-react';
-// import Link from 'next/link'; // Dihapus sementara untuk preview, diganti <a>
 
 // --- Data Mock untuk Todo List ---
 const todoItems = [
@@ -287,34 +289,15 @@ const AddTodoModal = ({ isOpen, onClose }: AddTodoModalProps) => {
 
     // Efek untuk menutup kalender saat klik di luar
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            // Cek jika klik di luar modalRef (termasuk backdrop)
-            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-                 // Ini akan dipanggil jika klik di backdrop, tapi kita juga ingin menutup jika klik di area modal *di luar* kalender
-                 // Biarkan penutupan backdrop utama (di div backdrop)
-            }
-            
-            // Cek spesifik untuk klik di luar kalender
-            // Jika kalender terbuka DAN klik terjadi di dalam modal TAPI *bukan* di dalam kalender
-            // (Logika ini menjadi rumit, cara termudah adalah menutup jika klik di luar area input + kalender)
-            // Solusi sederhana: Biarkan backdrop modal utama yang menutup
-        };
-
-        // Event listener yang lebih sederhana untuk menutup kalender jika klik di luar modal
-        // Note: Event listener di backdrop (onClose) akan menangani ini
-        
-        // Mari kita coba cara lain:
-        // Saat modal dibuka, tambahkan listener ke document
-        // Saat kalender dibuka, tambahkan listener ke konten modal
-        
+        // Saat kalender terbuka, tambahkan listener untuk menutupnya saat klik di mana saja
         if (!openCalendar) return;
 
-        // Tutup jika klik di mana saja (termasuk backdrop)
         const handleDocClick = () => setOpenCalendar(null);
         // Tambahkan delay agar klik yg membuka kalender tidak langsung menutupnya
-        setTimeout(() => document.addEventListener('mousedown', handleDocClick), 50);
+        const timer = setTimeout(() => document.addEventListener('mousedown', handleDocClick), 50);
 
         return () => {
+            clearTimeout(timer);
             document.removeEventListener('mousedown', handleDocClick);
         };
     }, [openCalendar]);
@@ -663,6 +646,7 @@ const AdminDashboardPage = () => {
     const [isTodoSidebarOpen, setIsTodoSidebarOpen] = useState(false); // State untuk Sidebar Todo
     const [todoSelectedDate, setTodoSelectedDate] = useState(new Date()); // State untuk tanggal Todo
     const [isTodoModalOpen, setIsTodoModalOpen] = useState(false); // State untuk Modal Tambah Todo
+    const [activeMenu, setActiveMenu] = useState('dashboard'); // State untuk menu aktif
 
     // Efek untuk menandai bahwa komponen sudah di-mount
     useEffect(() => {
@@ -710,24 +694,30 @@ const AdminDashboardPage = () => {
               saat file ini berjalan di dalam proyek Next.js Anda.
             */}
             
-            {/* Catatan: Asumsi `bg-gray-100` dan `font-family: 'Inter'`
-              diterapkan secara global di file _app.tsx atau globals.css Anda.
-              Div terluar ini menyesuaikan layout h-screen.
+            {/* Div terluar ini menyesuaikan layout h-screen.
+             PERUBAHAN: bg-gray-100 -> bg-white
             */}
-            <div className="flex h-screen bg-gray-100" style={{ fontFamily: "'Inter', sans-serif" }}>
+            <div className="flex h-screen bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
                 {/* ===== Sidebar ===== */}
-                <aside className="w-64 flex-shrink-0 bg-[#0c3c3d] text-white flex flex-col">
-                    {/* Logo/Judul Sidebar */}
-                    <div className="h-16 flex items-center justify-center px-4 border-b border-gray-700">
-                        <h1 className="text-xl font-bold">Toolbox <span className="text-xs font-light">v1.0.0</span></h1>
+                <aside className="w-64 flex-shrink-0 bg-[#3fa66c] text-white flex flex-col">
+                    {/* Logo/Judul Sidebar (Sesuai Gambar Baru) */}
+                    <div className="h-20 flex items-center px-5 gap-3">
+                        <FileSignature className="w-7 h-7 flex-shrink-0" />
+                        <div>
+                            <h1 className="text-xl font-bold">Toolbox</h1>
+                            <span className="text-xs font-light -mt-1 block">v1.0.0</span>
+                        </div>
                     </div>
 
-                    {/* Search Bar */}
+                    {/* Search Bar (Sesuai Gambar Baru) */}
                     <div className="p-4">
                         <div className="relative">
-                            <input type="text" placeholder="Search menu..." className={`w-full py-2 px-4 pr-10 bg-gray-800 text-white border border-gray-700 rounded-md text-sm focus:outline-none focus:border-green-500 ${ringStyles}`} />
-                            <span className="absolute top-2.5 right-3 text-gray-400">
+                            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
                                 <Search className="w-4 h-4" />
+                            </span>
+                            <input type="text" placeholder="Search menu..." className={`w-full h-10 py-2 pr-12 pl-10 bg-white text-gray-800 border border-gray-200 rounded-lg text-sm focus:outline-none ${ringStyles}`} />
+                            <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs font-medium bg-gray-100 border border-gray-300 rounded-md px-1.5 py-0.5">
+                                ⌘K
                             </span>
                         </div>
                     </div>
@@ -736,11 +726,17 @@ const AdminDashboardPage = () => {
                     <nav className="flex-1 px-4 py-2 space-y-2 overflow-y-auto">
                         {/* Grup Menu: Generals */}
                         <div>
-                            <span className="text-xs font-semibold text-gray-400 uppercase px-2">Generals</span>
+                            <span className="text-xs font-semibold text-white uppercase px-2">Generals</span>
                             <ul className="mt-1 space-y-1">
                                 <li>
-                                    {/* Link Aktif - Menggunakan <a> untuk preview. Path diperbarui ke /auth/dashboard */}
-                                    <a href="/auth/dashboard" className={`flex items-center space-x-3 px-3 py-2.5 bg-green-600 text-white rounded-md text-sm font-medium ${ringStyles}`}>
+                                    {/* Link Aktif - Dibuat dinamis */}
+                                    <a 
+                                        href="#" // Menggunakan <a> standar, bukan <Link>
+                                        onClick={(e) => { e.preventDefault(); setActiveMenu('dashboard'); }}
+                                        className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 ${ringStyles} ${
+                                            activeMenu === 'dashboard' ? 'bg-[#059669] text-white' : 'text-white hover:bg-[#047857]'
+                                        }`}
+                                    >
                                         <LayoutDashboard className="w-5 h-5" />
                                         <span>Dashboard</span>
                                     </a>
@@ -750,22 +746,43 @@ const AdminDashboardPage = () => {
 
                         {/* Grup Menu: Workspace */}
                         <div className="pt-2">
-                            <span className="text-xs font-semibold text-gray-400 uppercase px-2">Workspace</span>
+                            <span className="text-xs font-semibold text-white uppercase px-2">Workspace</span>
                             <ul className="mt-1 space-y-1">
                                 <li>
-                                    <a href="#" className={`flex items-center space-x-3 px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-md text-sm ${ringStyles}`}>
+                                    {/* Dibuat dinamis */}
+                                    <a 
+                                        href="#" 
+                                        onClick={(e) => { e.preventDefault(); setActiveMenu('myTeam'); }}
+                                        className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 ${ringStyles} ${
+                                            activeMenu === 'myTeam' ? 'bg-[#059669] text-white' : 'text-white hover:bg-[#047857]'
+                                        }`}
+                                    >
                                         <User className="w-5 h-5" />
                                         <span>My Team</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" className={`flex items-center space-x-3 px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-md text-sm ${ringStyles}`}>
+                                    {/* Dibuat dinamis */}
+                                    <a 
+                                        href="#" 
+                                        onClick={(e) => { e.preventDefault(); setActiveMenu('myJobs'); }}
+                                        className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 ${ringStyles} ${
+                                            activeMenu === 'myJobs' ? 'bg-[#059669] text-white' : 'text-white hover:bg-[#047857]'
+                                        }`}
+                                    >
                                         <Briefcase className="w-5 h-5" />
                                         <span>My Jobs</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" className={`flex items-center space-x-3 px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-md text-sm ${ringStyles}`}>
+                                    {/* Dibuat dinamis */}
+                                    <a 
+                                        href="#" 
+                                        onClick={(e) => { e.preventDefault(); setActiveMenu('report'); }}
+                                        className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 ${ringStyles} ${
+                                            activeMenu === 'report' ? 'bg-[#059669] text-white' : 'text-white hover:bg-[#047857]'
+                                        }`}
+                                    >
                                         <BarChart2 className="w-5 h-5" />
                                         <span>Report</span>
                                     </a>
@@ -775,10 +792,17 @@ const AdminDashboardPage = () => {
 
                         {/* Grup Menu: Master Data */}
                         <div className="pt-2">
-                            <span className="text-xs font-semibold text-gray-400 uppercase px-2">Master Data</span>
+                            <span className="text-xs font-semibold text-white uppercase px-2">Master Data</span>
                             <ul className="mt-1 space-y-1">
                                 <li>
-                                    <a href="#" className={`flex items-center space-x-3 px-3 py-2.5 text-gray-300 hover:bg-gray-800 rounded-md text-sm ${ringStyles}`}>
+                                    {/* Dibuat dinamis */}
+                                    <a 
+                                        href="#" 
+                                        onClick={(e) => { e.preventDefault(); setActiveMenu('organizations'); }}
+                                        className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150 ${ringStyles} ${
+                                            activeMenu === 'organizations' ? 'bg-[#059669] text-white' : 'text-white hover:bg-[#047857]'
+                                        }`}
+                                    >
                                         <Building className="w-5 h-5" />
                                         <span>Organizations</span>
                                     </a>
@@ -834,9 +858,10 @@ const AdminDashboardPage = () => {
                         {/* Baris 1: Welcome, Time, Jobs (Sesuai Gambar Baru) */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                             {/* Kartu Good Morning */}
-                            <div className="md:col-span-2 bg-white border rounded-lg p-6 flex items-center space-x-4">
+                            {/* PERUBAHAN: Menambahkan border-yellow-200 */}
+                            <div className="md:col-span-2 bg-white border border-yellow-200 rounded-lg p-6 flex items-center space-x-4">
                                 <div className="bg-yellow-100 p-3 rounded-lg">
-                                    <ArrowUpFromLine className="w-7 h-7 text-yellow-600" />
+                                    <Sun className="w-7 h-7 text-yellow-600" />
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-semibold text-gray-800">Good Morning, [User]!</h3>
@@ -845,7 +870,8 @@ const AdminDashboardPage = () => {
                             </div>
                             
                             {/* Kartu Jam & Tanggal (Sesuai Gambar Baru) */}
-                            <div className="bg-white border rounded-lg p-6 flex items-center space-x-4">
+                            {/* PERUBAHAN: Menambahkan border-orange-200 */}
+                            <div className="bg-white border border-orange-200 rounded-lg p-6 flex items-center space-x-4">
                                 <div className="bg-orange-100 p-3 rounded-lg">
                                     <CalendarDays className="w-7 h-7 text-orange-600" />
                                 </div>
@@ -887,7 +913,8 @@ const AdminDashboardPage = () => {
                         {/* Baris 2: Statistik Proyek */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                             {/* Total Project */}
-                            <div className="bg-white border rounded-lg p-5">
+                            {/* PERUBAHAN: Menambahkan border-blue-200 */}
+                            <div className="bg-white border border-blue-200 rounded-lg p-5">
                                 <div className="flex justify-between items-start">
                                     <div>
                                         <p className="text-sm text-gray-500">Total Project</p>
@@ -899,7 +926,8 @@ const AdminDashboardPage = () => {
                                 </div>
                             </div>
                             {/* Open Project */}
-                            <div className="bg-white border rounded-lg p-5">
+                            {/* PERUBAHAN: Menambahkan border-orange-200 */}
+                            <div className="bg-white border border-orange-200 rounded-lg p-5">
                                 <div className="flex justify-between items-start">
                                     <div>
                                         <p className="text-sm text-gray-500">Open Project</p>
@@ -911,7 +939,8 @@ const AdminDashboardPage = () => {
                                 </div>
                             </div>
                             {/* Progress Project */}
-                            <div className="bg-white border rounded-lg p-5">
+                            {/* PERUBAHAN: Menambahkan border-indigo-200 */}
+                            <div className="bg-white border border-indigo-200 rounded-lg p-5">
                                 <div className="flex justify-between items-start">
                                     <div>
                                         <p className="text-sm text-gray-500">Progress Project</p>
@@ -923,7 +952,8 @@ const AdminDashboardPage = () => {
                                 </div>
                             </div>
                             {/* Closed Project */}
-                            <div className="bg-white border rounded-lg p-5">
+                            {/* PERUBAHAN: Menambahkan border-green-200 */}
+                            <div className="bg-white border border-green-200 rounded-lg p-5">
                                 <div className="flex justify-between items-start">
                                     <div>
                                         <p className="text-sm text-gray-500">Closed Project</p>
@@ -1127,7 +1157,8 @@ const AdminDashboardPage = () => {
                                     {/* Item Karyawan 1 */}
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-3">
-                                            <img className="w-10 h-10 rounded-full" src="https://placehold.co/40x40/FF5252/FFFFFF?text=AR" alt="Arnandha Rifkiano" />
+                                            {/* PERBAIKAN: Menggunakan <img> standar */}
+                                            <img className="w-10 h-10 rounded-full" src="https://placehold.co/40x40/FF5252/FFFFFF?text=AR" alt="Arnandha Rifkiano" width={40} height={40} />
                                             <div>
                                                 <p className="font-medium text-gray-800">Arnandha Rifkiano</p>
                                             </div>
@@ -1141,7 +1172,8 @@ const AdminDashboardPage = () => {
                                     {/* Item Karyawan 2 */}
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-3">
-                                            <img className="w-10 h-10 rounded-full" src="https://placehold.co/40x40/C0C0C0/000000?text=AW" alt="Aditya Okta Wibowo" />
+                                            {/* PERBAIKAN: Menggunakan <img> standar */}
+                                            <img className="w-10 h-10 rounded-full" src="https://placehold.co/40x40/C0C0C0/000000?text=AW" alt="Aditya Okta Wibowo" width={40} height={40} />
                                             <div>
                                                 <p className="font-medium text-gray-800">Aditya Okta Wibowo</p>
                                             </div>
@@ -1155,7 +1187,8 @@ const AdminDashboardPage = () => {
                                     {/* Item Karyawan 3 */}
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-3">
-                                            <img className="w-10 h-10 rounded-full" src="https://placehold.co/40x40/333333/FFFFFF?text=CF" alt="Candra Firmansyah" />
+                                            {/* PERBAIKAN: Menggunakan <img> standar */}
+                                            <img className="w-10 h-10 rounded-full" src="https://placehold.co/40x40/333333/FFFFFF?text=CF" alt="Candra Firmansyah" width={40} height={40} />
                                             <div>
                                                 <p className="font-medium text-gray-800">Candra Firmansyah</p>
                                             </div>
@@ -1195,5 +1228,4 @@ const AdminDashboardPage = () => {
 };
 
 export default AdminDashboardPage;
-
 
