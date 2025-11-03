@@ -35,7 +35,7 @@ const Navbar = ({ isSidebarOpen, setSidebarOpen }: NavbarProps) => {
   }, [router.pathname]);
   
   return (
-    <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+    <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-6 py-4 rounded-tl-3xl">
       <div className="flex items-center justify-between">
         {/* Left Section - Menu Toggle & Breadcrumb */}
         <div className="flex items-center gap-4">
@@ -67,7 +67,7 @@ const Navbar = ({ isSidebarOpen, setSidebarOpen }: NavbarProps) => {
             <span className="text-gray-900 dark:text-gray-100 font-medium text-sm">2025</span>
           </button>
           
-          <AnimatedThemeToggler />
+          <AnimatedThemeToggler className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-gray-600 dark:text-gray-400" />
         </div>
       </div>
     </nav>
