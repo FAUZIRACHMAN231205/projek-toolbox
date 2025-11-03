@@ -50,46 +50,49 @@ function AdminDashboard() {
   };
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold text-green-700 mb-4">
-        Admin Dashboard
-      </h1>
-      <p className="mb-6">Buat akun baru agar bisa login ke aplikasi.</p>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-10">
+      <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg p-8">
+        <h1 className="text-3xl font-bold text-green-700 mb-2 flex items-center gap-2">
+          <span>Admin Dashboard</span>
+        </h1>
+        <p className="mb-8 text-gray-500 text-lg">Buat akun baru agar bisa login ke aplikasi.</p>
 
-      {/* 🔹 Form tambah user */}
-      <form onSubmit={handleAddUser} className="flex gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Username"
-          className="border px-4 py-2 rounded w-1/3"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="border px-4 py-2 rounded w-1/3"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button
-          type="submit"
-          className="bg-green-600 text-white px-6 py-2 rounded"
-        >
-          Tambah User
-        </button>
-      </form>
+        {/* 🔹 Form tambah user */}
+        <form onSubmit={handleAddUser} className="flex flex-col md:flex-row gap-4 mb-8">
+          <input
+            type="text"
+            placeholder="Username"
+            className="border border-gray-300 px-4 py-2 rounded-lg w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-green-400"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="border border-gray-300 px-4 py-2 rounded-lg w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-green-400"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button
+            type="submit"
+            className="bg-gradient-to-br from-green-600 to-green-500 text-white px-6 py-2 rounded-lg font-semibold shadow hover:from-green-700 hover:to-green-600 transition"
+          >
+            Tambah User
+          </button>
+        </form>
 
-      {/* 🔹 Daftar user */}
-      <h2 className="text-xl font-semibold mb-2">Daftar User</h2>
-      <ul className="list-disc list-inside">
-        {users.map((u, idx) => (
-          <li key={idx}>
-            <span className="font-medium">{u.username}</span> (
-            role: {u.role})
-          </li>
-        ))}
-      </ul>
+        {/* 🔹 Daftar user */}
+        <div className="bg-gray-100 rounded-lg p-6">
+          <h2 className="text-xl font-semibold mb-4 text-green-700">Daftar User</h2>
+          <ul className="list-disc list-inside space-y-2">
+            {users.map((u, idx) => (
+              <li key={idx} className="text-gray-700">
+                <span className="font-medium text-green-700">{u.username}</span> <span className="text-xs text-gray-500">(role: {u.role})</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
