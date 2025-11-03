@@ -20,7 +20,7 @@ const Sidebar = ({ isSidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   return (
     <aside
-      className={`min-h-screen bg-gradient-to-b from-green-600 to-green-700 dark:from-gray-900 dark:to-gray-950 text-white fixed top-0 left-0 h-screen z-20 transition-all duration-300 ${isSidebarOpen ? 'w-[280px]' : 'w-20'} flex flex-col border-r border-green-700/50 dark:border-gray-800`}
+      className={`min-h-screen bg-green-600 dark:bg-gray-900 text-white fixed top-0 left-0 h-screen z-20 transition-all duration-300 ${isSidebarOpen ? 'w-[280px]' : 'w-20'} flex flex-col border-r border-green-700/50 dark:border-gray-800`}
     >
       {/* Logo Section */}
       <div className={`p-5 ${!isSidebarOpen && 'flex justify-center'}`}>

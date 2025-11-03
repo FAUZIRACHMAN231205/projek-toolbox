@@ -1,6 +1,6 @@
 export default function Home({ isSidebarOpen }: { isSidebarOpen: boolean }) {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 transition-colors rounded-tl-3xl">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 transition-colors rounded-3xl">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Dashboard</h1>
