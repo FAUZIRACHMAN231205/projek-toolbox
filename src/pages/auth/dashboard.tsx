@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 // import Head from 'next/head'; // Dihapus sementara untuk preview
 // import Link from 'next/link'; // Diganti dengan <a>
-// import Image from 'next/image'; // Diganti dengan <img>
+import Image from 'next/image';
 import {
     LayoutDashboard,
     User,
@@ -34,6 +34,13 @@ import {
     Save, // Ditambahkan untuk Modal
     FileSignature // Ikon baru untuk logo
 } from 'lucide-react';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Circle, Pencil, Trash2, Eye } from "lucide-react";
 
 // --- Data Mock untuk Todo List ---
 const todoItems = [
@@ -613,7 +620,34 @@ const TodoSidebar = ({ isOpen, onClose, selectedDate, setSelectedDate, currentDa
                                 <div className="flex-1">
                                     <div className="flex justify-between items-center">
                                         <h4 className="font-semibold text-gray-800">{item.title}</h4>
-                                        <StatusBadge status={item.status} color={item.color as ColorKey} />
+                                        <div className="flex items-center space-x-2">
+                                            <StatusBadge status={item.status} color={item.color as ColorKey} />
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <button className="p-1 rounded-full hover:bg-gray-100">
+                                                        <MoreHorizontal className="w-5 h-5 text-gray-500" />
+                                                    </button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem>
+                                                        <Circle className="w-4 h-4 mr-2" />
+                                                        Ubah Status
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem>
+                                                        <Pencil className="w-4 h-4 mr-2" />
+                                                        Perbarui
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem>
+                                                        <Eye className="w-4 h-4 mr-2" />
+                                                        Detail
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem className="text-red-500">
+                                                        <Trash2 className="w-4 h-4 mr-2" />
+                                                        Hapus
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
                                     </div>
                                     <div className="flex items-center space-x-4 text-sm text-gray-500 mt-2">
                                         <div className="flex items-center space-x-1.5">
@@ -624,13 +658,27 @@ const TodoSidebar = ({ isOpen, onClose, selectedDate, setSelectedDate, currentDa
                                             <Bookmark className="w-4 h-4" />
                                             <span>{item.category}</span>
                                         </div>
+                                        <div className="flex items-center space-x-1.5">
+                                            <User className="w-4 h-4" />
+                                            <span>{item.category}</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <button className={`text-gray-400 hover:text-gray-600 p-1 rounded ${ringStyles}`}>
-                                    <MoreHorizontal className="w-5 h-5" />
-                                </button>
                             </div>
                         ))}
+                    </div>
+
+                    {/* Pagination */}
+                    <div className="flex justify-between items-center text-sm text-gray-500">
+                        <span>Showing 1 to 5 of 20 entries</span>
+                        <div className="flex space-x-2">
+                            <button className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200">
+                                <ChevronLeft className="w-4 h-4" />
+                            </button>
+                            <button className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200">
+                                <ChevronRight className="w-4 h-4" />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1157,8 +1205,7 @@ const AdminDashboardPage = () => {
                                     {/* Item Karyawan 1 */}
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-3">
-                                            {/* PERBAIKAN: Menggunakan <img> standar */}
-                                            <img className="w-10 h-10 rounded-full" src="https://placehold.co/40x40/FF5252/FFFFFF?text=AR" alt="Arnandha Rifkiano" width={40} height={40} />
+                                            <Image className="w-10 h-10 rounded-full" src="https://placehold.co/40x40/FF5252/FFFFFF?text=AR" alt="Arnandha Rifkiano" width={40} height={40} />
                                             <div>
                                                 <p className="font-medium text-gray-800">Arnandha Rifkiano</p>
                                             </div>
@@ -1172,8 +1219,7 @@ const AdminDashboardPage = () => {
                                     {/* Item Karyawan 2 */}
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-3">
-                                            {/* PERBAIKAN: Menggunakan <img> standar */}
-                                            <img className="w-10 h-10 rounded-full" src="https://placehold.co/40x40/C0C0C0/000000?text=AW" alt="Aditya Okta Wibowo" width={40} height={40} />
+                                            <Image className="w-10 h-10 rounded-full" src="https://placehold.co/40x40/C0C0C0/000000?text=AW" alt="Aditya Okta Wibowo" width={40} height={40} />
                                             <div>
                                                 <p className="font-medium text-gray-800">Aditya Okta Wibowo</p>
                                             </div>
@@ -1187,8 +1233,7 @@ const AdminDashboardPage = () => {
                                     {/* Item Karyawan 3 */}
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-3">
-                                            {/* PERBAIKAN: Menggunakan <img> standar */}
-                                            <img className="w-10 h-10 rounded-full" src="https://placehold.co/40x40/333333/FFFFFF?text=CF" alt="Candra Firmansyah" width={40} height={40} />
+                                            <Image className="w-10 h-10 rounded-full" src="https://placehold.co/40x40/333333/FFFFFF?text=CF" alt="Candra Firmansyah" width={40} height={40} />
                                             <div>
                                                 <p className="font-medium text-gray-800">Candra Firmansyah</p>
                                             </div>

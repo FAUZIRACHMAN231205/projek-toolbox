@@ -1,7 +1,8 @@
-import { Menu, Home, ChevronRight, Calendar } from 'lucide-react';
+import { Menu, Home, ChevronRight } from 'lucide-react';
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
+import { TodoListSheet } from '../todo/todo-list-sheet';
 
 interface NavbarProps {
   isSidebarOpen: boolean;
@@ -62,12 +63,9 @@ const Navbar = ({ isSidebarOpen, setSidebarOpen }: NavbarProps) => {
         
         {/* Right Section - Calendar & Theme Toggle */}
         <div className="flex items-center gap-4">
-          <button className="flex items-center gap-2 px-3 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
-            <Calendar size={18} className="text-gray-600 dark:text-gray-400" />
-            <span className="text-gray-900 dark:text-gray-100 font-medium text-sm">2025</span>
-          </button>
+          <TodoListSheet />
           
-          <AnimatedThemeToggler className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-gray-600 dark:text-gray-400" />
+          <AnimatedThemeToggler size={18} />
         </div>
       </div>
     </nav>
